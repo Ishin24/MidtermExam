@@ -5,7 +5,7 @@ import '../models/news_article.dart';
 /// Integrates the third-party public API: News API (https://newsapi.org)
 /// Free API key: sign up at https://newsapi.org/register
 class NewsService {
-  static const String _apiKey = "YOUR_NEWSAPI_KEY_HERE";
+  static const String _apiKey = "ff1a95a9c16e498d970967874a9f5ca1";
   static const String _baseUrl = "https://newsapi.org/v2/everything";
 
   Future<List<NewsArticle>> fetchDotaNews() async {
