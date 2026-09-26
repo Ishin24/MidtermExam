@@ -25,6 +25,26 @@ class ApiService {
     return "http://localhost$_path";
   }
 
+  /// Rewrites a remote hero image URL to go through our own image proxy.
+  ///
+  /// The Steam CDN answers with a hardcoded `Access-Control-Allow-Origin:
+  /// https://www.dota2.com`, so Flutter Web (CanvasKit) cannot decode the image
+  /// directly. Routing it through `image.php` re-serves it with permissive CORS
+  /// headers. Absolute local paths and empty values are passed through untouched.
+  static String proxyImage(String url) {
+    final trimmed = url.trim();
+    if (trimmed.isEmpty) return trimmed;
+
+    final uri = Uri.tryParse(trimmed);
+    if (uri == null || !uri.isAbsolute) return trimmed;
+    if (uri.scheme != 'http' && uri.scheme != 'https') return trimmed;
+
+    // Already ours - re-proxying would nest the endpoint inside itself.
+    if (uri.host == Uri.parse(baseUrl).host) return trimmed;
+
+    return "$baseUrl/image.php?url=${Uri.encodeComponent(trimmed)}";
+  }
+
   /// READ (GET) - all heroes
   Future<List<DotaHero>> getHeroes() async {
     final response = await http.get(Uri.parse("$baseUrl/read.php"));

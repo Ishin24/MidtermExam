@@ -19,7 +19,8 @@ class _HeroListScreenState extends State<HeroListScreen> {
   @override
   void initState() {
     super.initState();
-    _refresh();
+    // Assign directly: calling _refresh() here would setState() during build.
+    _futureHeroes = _api.getHeroes();
   }
 
   void _refresh() {

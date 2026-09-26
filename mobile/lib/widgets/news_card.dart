@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/news_article.dart';
+import '../services/api_service.dart';
 
 class NewsCard extends StatelessWidget {
   final NewsArticle article;
@@ -19,7 +20,9 @@ class NewsCard extends StatelessWidget {
               width: 100,
               height: 100,
               child: Image.network(
-                article.imageUrl!,
+                // News image hosts rarely send CORS headers, so route them
+                // through the backend proxy the same way hero art is routed.
+                ApiService.proxyImage(article.imageUrl!),
                 fit: BoxFit.cover,
                 errorBuilder: (c, e, s) => Container(
                   color: Colors.grey.shade300,

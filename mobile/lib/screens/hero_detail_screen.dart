@@ -20,7 +20,8 @@ class _HeroDetailScreenState extends State<HeroDetailScreen> {
   @override
   void initState() {
     super.initState();
-    _load();
+    // Assign directly: calling _load() here would setState() during build.
+    _futureHero = _api.getHero(widget.heroId);
   }
 
   void _load() {
@@ -81,9 +82,9 @@ class _HeroDetailScreenState extends State<HeroDetailScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (hero.imgUrl.isNotEmpty)
+                  if (hero.imageUrl.isNotEmpty)
                     Image.network(
-                      hero.imgUrl,
+                      hero.imageUrl,
                       width: double.infinity,
                       height: 220,
                       fit: BoxFit.cover,

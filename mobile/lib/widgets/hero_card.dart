@@ -36,9 +36,9 @@ class HeroCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Expanded(
-              child: hero.imgUrl.isNotEmpty
+              child: hero.imageUrl.isNotEmpty
                   ? Image.network(
-                      hero.imgUrl,
+                      hero.imageUrl,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stack) => Container(
                         color: color.withOpacity(0.15),

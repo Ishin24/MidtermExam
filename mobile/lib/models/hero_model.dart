@@ -1,3 +1,5 @@
+import '../services/api_service.dart';
+
 class DotaHero {
   final int? id;
   final String name;
@@ -47,4 +49,8 @@ class DotaHero {
 
   List<String> get roleList =>
       roles.split(',').map((r) => r.trim()).where((r) => r.isNotEmpty).toList();
+
+  /// [imgUrl] straight from the database, as the user typed it.
+  /// Use this when writing to the API so proxy URLs are never persisted.
+  String get imageUrl => ApiService.proxyImage(imgUrl);
 }
