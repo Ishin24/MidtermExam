@@ -26,18 +26,42 @@ This project has two parts:
 
 ## Backend Setup (PHP + MySQL)
 
-1. Requires PHP 7.4+ and MySQL (XAMPP / WAMP / MAMP / LAMP all work).
-2. Copy the `backend/` folder into your server's web root, e.g.
+This backend can run either on a local server (XAMPP/WAMP/MAMP) **or** on free/shared
+hosting (e.g. Freehostia). Shared hosting is recommended for this exam since it gives
+your API a public URL that works from any device with no `10.0.2.2`/LAN-IP juggling.
+
+### Option A — Shared hosting (e.g. Freehostia)
+
+1. In your hosting control panel, create a MySQL database (the host usually
+   auto-names it after your account, e.g. `youracct_dota-heroes`, and creates a
+   matching DB user — note the **host**, **db name**, **username**, **password**).
+2. Open phpMyAdmin from the panel, click into your database in the left sidebar
+   (so it's selected), then **Import** → choose `backend/sql/dota_heroes.sql` → Go.
+   (This file only contains `CREATE TABLE` + seed data — no `CREATE DATABASE`
+   statement, since shared hosting doesn't allow that.)
+3. Upload the entire `backend/` folder to your hosting account's `public_html`
+   (via File Manager or FTP/FileZilla).
+4. Edit `backend/config/database.php` with your real host/db name/username/password.
+5. Test in a browser: `http://yourdomain.tld/backend/heroes/read.php` — you should
+   see a JSON array of heroes.
+6. Point the Flutter app's `baseUrl` (in `mobile/lib/services/api_service.dart`) at
+   `http://yourdomain.tld/backend/heroes`.
+
+### Option B — Local server (XAMPP/WAMP/MAMP/LAMP)
+
+1. Copy the `backend/` folder into your server's web root, e.g.
    `C:/xampp/htdocs/dota-heroes-app/backend`.
-3. Import `backend/sql/dota_heroes.sql` into MySQL (via phpMyAdmin or CLI). This
-   creates the `dota_heroes_db` database, the `heroes` table, and seeds 8 real heroes.
-4. Update credentials in `backend/config/database.php` if your MySQL user/password differ.
-5. Test the API in a browser or Postman:
+2. Import `backend/sql/dota_heroes.sql` into a database you create yourself
+   (e.g. `dota_heroes_db`) via phpMyAdmin.
+3. Update credentials in `backend/config/database.php` to match.
+4. Test the API in a browser or Postman:
    - `GET  http://localhost/dota-heroes-app/backend/heroes/read.php`
    - `GET  http://localhost/dota-heroes-app/backend/heroes/read_one.php?id=1`
    - `POST http://localhost/dota-heroes-app/backend/heroes/create.php`
    - `PUT  http://localhost/dota-heroes-app/backend/heroes/update.php`
    - `DELETE http://localhost/dota-heroes-app/backend/heroes/delete.php`
+   - With this option, the Flutter app's `baseUrl` needs the emulator/device rules
+     described below (`10.0.2.2`, `localhost`, or LAN IP).
 
 ### Endpoint Reference
 
