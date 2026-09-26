@@ -1,15 +1,29 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart'
+    show defaultTargetPlatform, kIsWeb, TargetPlatform;
 import 'package:http/http.dart' as http;
 import '../models/hero_model.dart';
 
 /// Talks to our OWN custom REST API (PHP + MySQL backend).
 ///
-/// IMPORTANT: Update [baseUrl] to point at your running backend.
-///  - Android emulator talking to XAMPP/WAMP on your PC: 10.0.2.2
-///  - iOS simulator: localhost
-///  - Physical device: your computer's LAN IP, e.g. http://192.168.1.10/...
+/// [baseUrl] resolves itself per platform, so the same code runs everywhere:
+///  - Chrome / Edge (web): localhost
+///  - Android emulator: 10.0.2.2, the emulator's alias for the host machine
+///  - iOS simulator / desktop: localhost
+///  - Physical device: pass your LAN IP at build time, e.g.
+///    `flutter run --dart-define=API_BASE_URL=http://192.168.1.205/dota-heroes-app/backend/heroes`
 class ApiService {
-  static const String baseUrl = "http://10.0.2.2/dota-heroes-app/backend/heroes";
+  static const String _path = "/dota-heroes-app/backend/heroes";
+  static const String _override = String.fromEnvironment('API_BASE_URL');
+
+  static String get baseUrl {
+    if (_override.isNotEmpty) return _override;
+    if (kIsWeb) return "http://localhost$_path";
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      return "http://10.0.2.2$_path";
+    }
+    return "http://localhost$_path";
+  }
 
   /// READ (GET) - all heroes
   Future<List<DotaHero>> getHeroes() async {
